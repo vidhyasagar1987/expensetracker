@@ -10,7 +10,7 @@ import Income from "./pages/Income";
 
 function App() {
   // const { isAuthenticated, user } = useSelector((state) => state.auth);
-
+console.log("first")
   // console.log(isAuthenticated, user);
   return (
     <Routes>
