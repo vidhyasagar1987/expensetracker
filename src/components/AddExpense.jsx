@@ -3,6 +3,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { addExpense, getExpenses } from "../redux/slices/expensesSlice";
+import "../css/modal.css";
+import InputField from "./InputFiled";
+import SelectField from "./SelectInputField";
 
 const AddExpense = ({ setOpenModal }) => {
   const { addExpenseLoading, addExpenseError } = useSelector(
@@ -37,70 +40,88 @@ const AddExpense = ({ setOpenModal }) => {
     },
   });
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          type="number"
-          name="expenseAmount"
-          value={formik.values.expenseAmount}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Enter expenseAmount"
-        />
-        {formik.touched.expenseAmount && formik.errors.expenseAmount && (
-          <p>{formik.errors.expenseAmount}</p>
-        )}
-        <input
-          type="date"
-          name="expenseDate"
-          value={formik.values.expenseDate}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Enter expenseDate"
-        />
-        {formik.touched.expenseDate && formik.errors.expenseDate && (
-          <p>{formik.errors.expenseDate}</p>
-        )}
-        <select
-          name="expenseCategory"
-          value={formik.values.expenseCategory}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        >
-          <option disabled value="">
-            Select a Category
-          </option>
-          <option value="Rent">Rent</option>
-          <option value="Groceries">Groceries</option>
-        </select>
-        {formik.touched.expenseCategory && formik.errors.expenseCategory && (
-          <p>{formik.errors.expenseCategory}</p>
-        )}
-        <input
-          type="text"
-          name="expenseComment"
-          value={formik.values.expenseComment}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Enter expenseComment"
-        />
-        {formik.touched.expenseComment && formik.errors.expenseComment && (
-          <p>{formik.errors.expenseComment}</p>
-        )}
+    <div className="modal-background">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h2 className="modal-title">Add Expense</h2>
+        </div>
+        <div className="modal-body">
+          <form onSubmit={formik.handleSubmit}>
+            <InputField
+              label="Expense Amount"
+              type="number"
+              name="expenseAmount"
+              value={formik.values.expenseAmount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="100.00"
+              required
+              errorMessage={
+                formik.touched.expenseAmount && formik.errors.expenseAmount
+              }
+            />
 
-        <button type="submit" disabled={addExpenseLoading}>
-          {addExpenseLoading ? "Adding" : "Add"}
-        </button>
-        <button
-          onClick={() => {
-            setOpenModal(false);
-          }}
-          disabled={addExpenseLoading}
-        >
-          Cancel
-        </button>
-      </form>
-      {addExpenseError && <p>{addExpenseError}</p>}
+            <InputField
+              label="Expense Date"
+              type="date"
+              name="expenseDate"
+              value={formik.values.expenseDate}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="Enter expense date"
+              errorMessage={
+                formik.touched.expenseDate && formik.errors.expenseDate
+              }
+              required
+            />
+
+            <SelectField
+              label="Expense Category"
+              name="expenseCategory"
+              value={formik.values.expenseCategory}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              required
+              options={[
+                { label: "Rent", value: "Rent" },
+                { label: "Savings", value: "Savings" },
+                { label: "Groceries", value: "Groceries" },
+              ]}
+              errorMessage={
+                formik.touched.expenseCategory && formik.errors.expenseCategory
+              }
+            />
+
+            <InputField
+              type="text"
+              label="Expense Comment"
+              name="expenseComment"
+              value={formik.values.expenseComment}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="Shopping..."
+              required
+              errorMessage={
+                formik.touched.expenseComment && formik.errors.expenseComment
+              }
+            />
+
+            <button type="submit" disabled={addExpenseLoading}>
+              {addExpenseLoading ? "Adding" : "Add"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setOpenModal(false);
+              }}
+              disabled={addExpenseLoading}
+            >
+              Cancel
+            </button>
+          </form>
+          {addExpenseError && <p>{addExpenseError}</p>}
+        </div>
+      </div>
     </div>
   );
 };

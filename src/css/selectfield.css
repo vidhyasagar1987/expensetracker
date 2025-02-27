@@ -1,0 +1,72 @@
+.select-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.fixed-label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: #fff;
+  padding: 0 5px;
+  font-size: 13px;
+  color: #8a8a8a;
+  font-weight: 400;
+}
+
+.required-asterisk {
+  color: #ff0101;
+  margin-left: 2px;
+}
+
+.select {
+  width: 100%;
+  padding: 12px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: none;
+  outline: none;
+  transition: border-color 0.3s;
+  color: #333;
+  appearance: none;
+}
+
+.select::placeholder {
+  color: #ccc;
+  opacity: 0.8;
+}
+
+.select:focus {
+  border-color: #7c52f4;
+}
+
+.select-error {
+  border-color: #ff5d01;
+}
+
+.error-message {
+  color: #ff0101;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.select option {
+  font-size: 14px;
+  padding: 10px;
+  color: #333;
+  background-color: #fff;
+}
+
+.select option:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.select option:disabled {
+  color: #999;
+  background-color: #f9f9f9;
+}
+
+

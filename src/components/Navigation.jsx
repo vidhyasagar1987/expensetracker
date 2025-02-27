@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { removeAuth } from "../redux/slices/authSlice";
 import { removeUser } from "../redux/slices/loginslice";
 import { resetExpenses } from "../redux/slices/expensesSlice";
+import { resetincome } from "../redux/slices/incomeSlice";
+import "../css/layout.css"
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ const Navigation = () => {
         dispatch(removeAuth());
         dispatch(removeUser());
         dispatch(resetExpenses());
+        dispatch(resetincome());
+
       }
     } catch (error) {
       console.log(error.message);
@@ -27,6 +31,8 @@ const Navigation = () => {
     <div>
       <Link to="/dashboard">Dashboard</Link>
       <Link to="/expenses">Expenses</Link>
+      <Link to="/income">Income</Link>
+
       <button onClick={logout}>SignOut</button>
     </div>
   );

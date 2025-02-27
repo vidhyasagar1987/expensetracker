@@ -28,10 +28,11 @@ const Login = () => {
       const resultAction = await dispatch(getLoginUser(values));
       if (getLoginUser.fulfilled.match(resultAction)) {
         navigate("/dashboard");
-        formik.resetForm()
+        formik.resetForm();
       }
     },
   });
+
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
