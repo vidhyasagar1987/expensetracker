@@ -14,7 +14,15 @@ function App() {
   // console.log(isAuthenticated, user);
   return (
     <>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
       <Routes>
         {/* <Route
         path="/"

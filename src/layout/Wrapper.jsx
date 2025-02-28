@@ -7,8 +7,10 @@ import { getExpenses } from "../redux/slices/expensesSlice.js";
 import { getincome } from "../redux/slices/incomeSlice.js";
 import "../css/layout.css";
 import { PiHandWavingBold } from "react-icons/pi";
-import { logo } from "../utils/constants.jsx";
+import { addExpense, logo } from "../utils/constants.jsx";
 import AddExpense from "../components/AddExpense.jsx";
+import GlobalButton from "../components/GlobalButton.jsx";
+import { AddIcon } from "../utils/icons.jsx";
 
 const Wrapper = ({ children }) => {
   const { user, isAuthenticated, authlLoading, authError } = useSelector(
@@ -50,13 +52,20 @@ const Wrapper = ({ children }) => {
           />
           {user ? <p>Hello, {userName} </p> : <p>Not Found</p>}
         </div>
-        <button className="button" onClick={() => setOpenModal(true)}>
-          Add a Expense
-        </button>
+
+        <GlobalButton
+          onClick={() => setOpenModal(true)}
+          buttonType="primary"
+          icon={AddIcon}
+        >
+          {addExpense}
+        </GlobalButton>
       </header>
+
       {openModal && <AddExpense setOpenModal={setOpenModal} />}
 
       <Navigation />
+
       <div className="helloTextMobile">
         <PiHandWavingBold
           style={{ color: "#7C52F4", fontSize: "1.5rem", paddingRight: "5px" }}

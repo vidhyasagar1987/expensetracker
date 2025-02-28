@@ -11,8 +11,10 @@ body {
   width: 100%;
   /* place-items: center; */
   min-height: 100vh;
+}
 
-
+.error {
+  color: #ff0101;
 }
 /*
 a {

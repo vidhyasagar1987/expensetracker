@@ -11,24 +11,50 @@ const InputField = ({
   errorMessage,
   required = false,
   label,
+  select,
+  options = [],
   ...rest
 }) => {
   return (
     <div className="input-container">
-      <label htmlFor={name} className="fixed-label">
-      {label} {required && <span className="required-asterisk">*</span>}
+      <label
+        htmlFor={name}
+        className={`fixed-label ${errorMessage ? "input-error" : ""}`}
+      >
+        {label} {required && <span className="required-asterisk">*</span>}
       </label>
-      <input
-        id={name}
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        className={`input ${errorMessage ? "input-error" : ""}`}
-        {...rest}
-      />
+      {select ? (
+        <select
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          className={`input ${errorMessage ? "input-error" : ""}`}
+          {...rest}
+        >
+          <option disabled value="">
+            -- Select an option --
+          </option>
+          {options.map((option, index) => (
+            <option key={index} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={name}
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          className={`input ${errorMessage ? "input-error" : ""}`}
+          {...rest}
+        />
+      )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>

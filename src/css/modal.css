@@ -30,47 +30,20 @@
 }
 .modal-content {
   background-color: #fff;
-  width: 500px;
+  width: 90%; /* Adjust width to fit smaller screens */
+  max-width: 500px; /* Maintain max width for larger screens */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease-in-out;
   box-sizing: border-box;
 }
 
-.modal-content button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Allow buttons to wrap if needed */
+  justify-content: flex-end; /* Align buttons to the right */
 }
-
-.modal-content button[type="submit"] {
-  background: linear-gradient(90deg, #ff7f11, #ff5d01);
-  color: #fff;
-}
-
-.modal-content button[type="button"] {
-  background-color: #ccc;
-  color: #000;
-  margin-left: 10px;
-}
-
-.modal-content button[type="submit"]:hover {
-  background: linear-gradient(90deg, #ff5d01, #e44d00);
-}
-
-.modal-content button[type="button"]:hover {
-  background-color: #bbb;
-}
-
-/* .modal-content p {
-  color: #ff5d01;
-  font-size: 14px;
-  margin-top: -10px;
-  margin-bottom: 10px;
-} */
 
 @keyframes fadeIn {
   from {
@@ -80,5 +53,26 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: 90%;
+  }
+
+  .modal-title {
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 25px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-title {
+    font-size: 14px;
   }
 }

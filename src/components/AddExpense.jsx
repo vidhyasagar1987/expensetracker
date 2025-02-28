@@ -1,11 +1,14 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { addExpense, getExpenses } from "../redux/slices/expensesSlice";
 import "../css/modal.css";
 import InputField from "./InputFiled";
-import SelectField from "./SelectInputField";
+import GlobalButton from "./GlobalButton";
+import { cancel } from "../utils/constants";
+import { AddIcon, CancelIcon } from "../utils/icons";
+import { toast } from "react-toastify";
 
 const AddExpense = ({ setOpenModal }) => {
   const { addExpenseLoading, addExpenseError } = useSelector(
@@ -20,6 +23,12 @@ const AddExpense = ({ setOpenModal }) => {
     expenseComment: yup.string().required("Required"),
     expenseCategory: yup.string().required("Required"),
   });
+
+  useEffect(() => {
+    if (addExpenseError) {
+      toast.error(addExpenseError); 
+    }
+  }, [addExpenseError]);
 
   const formik = useFormik({
     validationSchema,
@@ -36,6 +45,7 @@ const AddExpense = ({ setOpenModal }) => {
         dispatch(getExpenses());
         formik.resetForm();
         setOpenModal(false);
+        toast.success("Expense added successfully");
       }
     },
   });
@@ -46,7 +56,7 @@ const AddExpense = ({ setOpenModal }) => {
           <h2 className="modal-title">Add Expense</h2>
         </div>
         <div className="modal-body">
-          <form onSubmit={formik.handleSubmit}>
+          <form>
             <InputField
               label="Expense Amount"
               type="number"
@@ -75,13 +85,14 @@ const AddExpense = ({ setOpenModal }) => {
               required
             />
 
-            <SelectField
+            <InputField
               label="Expense Category"
               name="expenseCategory"
               value={formik.values.expenseCategory}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               required
+              select
               options={[
                 { label: "Rent", value: "Rent" },
                 { label: "Savings", value: "Savings" },
@@ -105,21 +116,30 @@ const AddExpense = ({ setOpenModal }) => {
                 formik.touched.expenseComment && formik.errors.expenseComment
               }
             />
-
-            <button type="submit" disabled={addExpenseLoading}>
-              {addExpenseLoading ? "Adding" : "Add"}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setOpenModal(false);
-              }}
-              disabled={addExpenseLoading}
-            >
-              Cancel
-            </button>
+            <div className="modal-footer">
+              <GlobalButton
+                buttonType="primary"
+                onClick={formik.handleSubmit}
+                disabled={addExpenseLoading}
+                icon={AddIcon}
+                type="submit"
+                loading={addExpenseLoading}
+              >
+                {addExpenseLoading ? "Adding" : "Add"}
+              </GlobalButton>
+              <GlobalButton
+                buttonType="secondary"
+                icon={CancelIcon}
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+                disabled={addExpenseLoading}
+              >
+                {cancel}
+              </GlobalButton>
+            </div>
           </form>
-          {addExpenseError && <p>{addExpenseError}</p>}
+          {addExpenseError && <p className="error">{addExpenseError}</p>}
         </div>
       </div>
     </div>

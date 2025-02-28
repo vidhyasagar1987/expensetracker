@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { addUser, getLoginUser } from "../redux/slices/loginslice";
 import { useNavigate } from "react-router-dom";
+import InputField from "../components/InputFiled";
 
 const Login = () => {
   const { email, password, loginLoading, loginError } = useSelector(
@@ -36,28 +37,28 @@ const Login = () => {
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <input
+        <InputField
+          label="Email"
           type="email"
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Enter Email"
+          placeholder="john@example.com"
+          required
+          errorMessage={formik.touched.email && formik.errors.email}
         />
-        {formik.touched.email && formik.errors.email && (
-          <p>{formik.errors.email}</p>
-        )}
-        <input
+        <InputField
+          label="Password"
           type="password"
           name="password"
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Enter Password"
+          placeholder="......"
+          required
+          errorMessage={formik.touched.password && formik.errors.password}
         />
-        {formik.touched.password && formik.errors.password && (
-          <p>{formik.errors.password}</p>
-        )}
 
         <button type="submit" disabled={loginLoading}>
           {loginLoading ? "Submitting" : "Login"}
