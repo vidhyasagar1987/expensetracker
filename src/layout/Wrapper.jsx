@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import { getAuthDetails } from "../redux/slices/authSlice.js";
-import { getExpenses } from "../redux/slices/expensesSlice.js";
+import { getExpenses, setOpenModal } from "../redux/slices/expensesSlice.js";
 import { getincome } from "../redux/slices/incomeSlice.js";
 import "../css/layout.css";
 import { PiHandWavingBold } from "react-icons/pi";
@@ -11,20 +11,35 @@ import { addExpense, logo } from "../utils/constants.jsx";
 import AddExpense from "../components/AddExpense.jsx";
 import GlobalButton from "../components/GlobalButton.jsx";
 import { AddIcon } from "../utils/icons.jsx";
+import Spinner from "../components/Spinner.jsx";
+import { toast } from "react-toastify";
 
 const Wrapper = ({ children }) => {
   const { user, isAuthenticated, authlLoading, authError } = useSelector(
     (state) => state.auth
   );
 
-  const [openModal, setOpenModal] = useState(false);
+  const { openModal } = useSelector((state) => state.expenses);
+
+  // const [openModal, setOpenModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (authError) {
+      toast.error(authError);
+    }
+  }, [authError]);
+
+  useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getExpenses());
-      dispatch(getincome());
+      const currentDate = new Date();
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
+
+      dispatch(getExpenses({ month, year }));
+      dispatch(getincome({ month, year }));
     }
   }, [isAuthenticated, dispatch]);
 
@@ -33,7 +48,7 @@ const Wrapper = ({ children }) => {
   }, [dispatch]);
 
   if (authlLoading) {
-    return <div>"Loading..."</div>;
+    return <Spinner />;
   }
 
   if (!isAuthenticated) {
@@ -45,6 +60,12 @@ const Wrapper = ({ children }) => {
   return (
     <main className="main-bg">
       <header>
+        <button
+          className="hamburger-icon"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          &#9776;
+        </button>
         <div className="logo">{logo}</div>
         <div className="helloText">
           <PiHandWavingBold
@@ -54,7 +75,7 @@ const Wrapper = ({ children }) => {
         </div>
 
         <GlobalButton
-          onClick={() => setOpenModal(true)}
+          onClick={() => dispatch(setOpenModal(true))}
           buttonType="primary"
           icon={AddIcon}
         >
@@ -62,17 +83,25 @@ const Wrapper = ({ children }) => {
         </GlobalButton>
       </header>
 
-      {openModal && <AddExpense setOpenModal={setOpenModal} />}
+      <aside className={`navigation ${isMobileMenuOpen ? "open" : ""}`}>
+        <Navigation />
+      </aside>
 
-      <Navigation />
+      {openModal && <AddExpense />}
 
-      <div className="helloTextMobile">
-        <PiHandWavingBold
-          style={{ color: "#7C52F4", fontSize: "1.5rem", paddingRight: "5px" }}
-        />
-        {user ? <p>Hello, {userName} </p> : <p>Not Found</p>}
+      <div className={`content ${isMobileMenuOpen ? "shifted" : ""}`}>
+        <div className="helloTextMobile">
+          <PiHandWavingBold
+            style={{
+              color: "#7C52F4",
+              fontSize: "1.5rem",
+              paddingRight: "5px",
+            }}
+          />
+          {user ? <p>Hello, {userName} </p> : <p>Not Found</p>}
+        </div>
+        <div className="dashboard-container"> {children || <Outlet />}</div>
       </div>
-      {children || <Outlet />}
     </main>
   );
 };

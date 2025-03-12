@@ -12,6 +12,7 @@ const InputField = ({
   required = false,
   label,
   select,
+  icon,
   options = [],
   ...rest
 }) => {
@@ -23,6 +24,7 @@ const InputField = ({
       >
         {label} {required && <span className="required-asterisk">*</span>}
       </label>
+
       {select ? (
         <select
           id={name}
@@ -43,17 +45,20 @@ const InputField = ({
           ))}
         </select>
       ) : (
-        <input
-          id={name}
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          className={`input ${errorMessage ? "input-error" : ""}`}
-          {...rest}
-        />
+        <div className="input-wrapper">
+          <input
+            id={name}
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            className={`input ${errorMessage ? "input-error" : ""}`}
+            {...rest}
+          />
+          {icon && <div className="input-icon">{icon}</div>}
+        </div>
       )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}

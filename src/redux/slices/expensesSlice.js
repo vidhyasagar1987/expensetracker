@@ -1,9 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import supabase from "../../supabase/client";
 
+export const getExpenseById = createAsyncThunk(
+  "getExpenseById",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from("Expenses")
+        .select("*")
+        .eq("id", payload);
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+      return data[0];
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getExpenses = createAsyncThunk(
   "getExpenses",
-  async (_, { rejectWithValue, getState }) => {
+  async ({ month, year }, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
       const userId = auth.user?.id;
@@ -12,16 +30,25 @@ export const getExpenses = createAsyncThunk(
         return rejectWithValue("User not authenticated");
       }
 
+      const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+      const endDate = `${year}-${String(month).padStart(2, "0")}-${new Date(
+        year,
+        month,
+        0
+      ).getDate()}`;
+
       const { data: Expenses, error } = await supabase
         .from("Expenses")
         .select("*")
-        .eq("createdBy", userId);
+        .eq("createdBy", userId)
+        .gte("expenseDate", startDate)
+        .lte("expenseDate", endDate);
 
       if (error) {
         return rejectWithValue(error.message);
       }
 
-      return Expenses;
+      return Expenses?.sort((a, b) => b.id - a.id);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -47,6 +74,27 @@ export const addExpense = createAsyncThunk(
   }
 );
 
+export const updateExpense = createAsyncThunk(
+  "updateExpense",
+  async ({ payload, recordId }, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from("Expenses")
+        .update([payload])
+        .eq("id", recordId)
+        .select();
+
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const expensesSlice = createSlice({
   name: "expense",
   initialState: {
@@ -55,10 +103,28 @@ const expensesSlice = createSlice({
     expenseError: null,
     addExpenseLoading: false,
     addExpenseError: null,
+    openModal: false,
+    editMode: false,
+    recordId: null,
+    editData: {},
+    getExpenseByIdLoading: false,
+    getExpenseByIdError: null,
+    updateExpenseLoading: false,
+    updateExpenseError: null,
   },
   reducers: {
     resetExpenses: (state) => {
       state.data = [];
+    },
+    setOpenModal: (state, action) => {
+      state.openModal = action.payload;
+      state.editData = {};
+    },
+    setEditMode: (state, action) => {
+      state.editMode = action.payload;
+    },
+    setRecordId: (state, action) => {
+      state.recordId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -82,18 +148,44 @@ const expensesSlice = createSlice({
         state.addExpenseLoading = true;
         state.addExpenseError = null;
       })
-      .addCase(addExpense.fulfilled, (state, action) => {
-        console.log(action);
+      .addCase(addExpense.fulfilled, (state) => {
         state.addExpenseLoading = false;
         state.addExpenseError = null;
       })
       .addCase(addExpense.rejected, (state, action) => {
         state.addExpenseLoading = false;
         state.addExpenseError = action.payload;
+      })
+      .addCase(updateExpense.pending, (state) => {
+        state.updateExpenseLoading = true;
+        state.updateExpenseError = null;
+      })
+      .addCase(updateExpense.fulfilled, (state) => {
+        state.updateExpenseLoading = false;
+        state.updateExpenseError = null;
+      })
+      .addCase(updateExpense.rejected, (state, action) => {
+        state.updateExpenseLoading = false;
+        state.updateExpenseError = action.payload;
+      })
+      .addCase(getExpenseById.pending, (state) => {
+        state.getExpenseByIdLoading = true;
+        state.getExpenseByIdError = null;
+        state.editData = {};
+      })
+      .addCase(getExpenseById.fulfilled, (state, action) => {
+        state.getExpenseByIdLoading = false;
+        state.getExpenseByIdError = null;
+        state.editData = action.payload;
+      })
+      .addCase(getExpenseById.rejected, (state, action) => {
+        state.getExpenseByIdLoading = false;
+        state.getExpenseByIdError = action.payload;
       });
   },
 });
 
-export const { resetExpenses } = expensesSlice.actions;
+export const { resetExpenses, setOpenModal, setEditMode, setRecordId } =
+  expensesSlice.actions;
 
 export default expensesSlice.reducer;

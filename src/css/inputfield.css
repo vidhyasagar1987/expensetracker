@@ -12,21 +12,29 @@
   font-size: 13px;
   color: #333;
   font-weight: 400;
+  z-index: 2;
 }
 
 .input::placeholder {
   color: #ccc;
   opacity: 0.8;
-  font-size: 12px;
+  font-size: 13px;
 }
 .required-asterisk {
   color: #ff5d01;
   margin-left: 2px;
 }
 
+.input-wrapper {
+  position: relative;
+}
+
+
 .input {
   width: 100%;
   padding: 12px 10px;
+  padding-right: 40px; /* Adjust padding for the icon */
+
   font-size: 14px;
   border: 1px solid #b9b9b9;
   border-radius: 5px;
@@ -45,7 +53,14 @@
   border-color: #ff5d01;
   color: #ff0101 !important;
 }
-
+.input-icon {
+  position: absolute;
+  top: 42%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #777;
+}
 .error-message {
   color: #ff0101;
   font-size: 12px;
@@ -88,6 +103,8 @@
 
   .input {
     padding: 8px 6px;
+    padding-right: 35px; /* Adjust padding for the icon on smaller screens */
+
     font-size: 12px;
     border-radius: 4px;
   }

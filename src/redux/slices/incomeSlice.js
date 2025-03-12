@@ -3,7 +3,7 @@ import supabase from "../../supabase/client";
 
 export const getincome = createAsyncThunk(
   "getincome",
-  async (_, { rejectWithValue, getState }) => {
+  async ({ month, year }, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
       const userId = auth.user?.id;
@@ -11,11 +11,18 @@ export const getincome = createAsyncThunk(
       if (!userId) {
         return rejectWithValue("User not authenticated");
       }
-
+      const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+      const endDate = `${year}-${String(month).padStart(2, "0")}-${new Date(
+        year,
+        month,
+        0
+      ).getDate()}`;
       const { data: Income, error } = await supabase
         .from("Income")
         .select("*")
-        .eq("createdBy", userId);
+        .eq("createdBy", userId)
+        .gte("incomeDate", startDate)
+        .lte("incomeDate", endDate);
 
       if (error) {
         return rejectWithValue(error.message);
