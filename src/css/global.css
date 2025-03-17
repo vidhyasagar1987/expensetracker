@@ -34,6 +34,17 @@
   transform: translateY(-2px);
 }
 
+.delete {
+  background: linear-gradient(90deg, #ff0000c5, #b30000b9);
+  color: #fff;
+}
+
+.delete:hover {
+  background: linear-gradient(90deg, #ff1111, #b30000);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
 .secondary:hover {
   background-color: #bbb;
   box-shadow: 0 6px 10px rgba(80, 80, 80, 0.15);

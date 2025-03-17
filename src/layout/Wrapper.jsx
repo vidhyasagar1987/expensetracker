@@ -21,7 +21,6 @@ const Wrapper = ({ children }) => {
 
   const { openModal } = useSelector((state) => state.expenses);
 
-  // const [openModal, setOpenModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const dispatch = useDispatch();

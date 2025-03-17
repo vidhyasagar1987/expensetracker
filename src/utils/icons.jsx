@@ -2,7 +2,8 @@ import { IoMdAdd } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { IoLogIn } from "react-icons/io5";
 import { IoLogOut } from "react-icons/io5";
-
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDelete } from "react-icons/md";
 
 
 export const AddIcon = (
@@ -12,15 +13,52 @@ export const AddIcon = (
 );
 
 export const CancelIcon = (
-  <IoMdClose  style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }} />
+  <IoMdClose
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
 );
 
 export const LoginIcon = (
-  <IoLogIn  style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }} />
+  <IoLogIn
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
 );
 
 export const LoginOut = (
-  <IoLogOut  style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }} />
+  <IoLogOut
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
 );
 
+export const EditIcon = (
+  <CiEdit
+    style={{
+      fontSize: "1rem",
+      paddingRight: "4px",
+      paddingTop: "2px",
+      cursor: "pointer",
+    }}
+  />
+);
 
+export const DeleteIcon = (
+  <MdOutlineDelete
+    style={{
+      fontSize: "1rem",
+      paddingRight: "4px",
+      paddingTop: "2px",
+      color:"red",
+      cursor: "pointer",
+    }}
+  />
+);
+
+export const LightDeleteIcon = (
+  <MdOutlineDelete
+    style={{
+      fontSize: "1rem",
+      paddingRight: "4px",
+      paddingTop: "2px",
+    }}
+  />
+);

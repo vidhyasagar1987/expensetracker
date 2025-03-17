@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import supabase from "../../supabase/client";
+import { month, year } from "../../utils/cuurentDate";
 
 export const getExpenseById = createAsyncThunk(
   "getExpenseById",
@@ -95,6 +96,27 @@ export const updateExpense = createAsyncThunk(
   }
 );
 
+export const deleteExpense = createAsyncThunk(
+  "deleteExpense",
+  async (payload, { rejectWithValue, dispatch }) => {
+    try {
+      const { error } = await supabase
+        .from("Expenses")
+        .delete()
+        .eq("id", payload);
+
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+
+      await dispatch(getExpenses({ month, year }));
+      return { success: true };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const expensesSlice = createSlice({
   name: "expense",
   initialState: {
@@ -111,6 +133,9 @@ const expensesSlice = createSlice({
     getExpenseByIdError: null,
     updateExpenseLoading: false,
     updateExpenseError: null,
+    deleteModal: false,
+    deleteExpenseLoading: false,
+    deleteExpenseError: null,
   },
   reducers: {
     resetExpenses: (state) => {
@@ -125,6 +150,9 @@ const expensesSlice = createSlice({
     },
     setRecordId: (state, action) => {
       state.recordId = action.payload;
+    },
+    setDeleteModal: (state, action) => {
+      state.deleteModal = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -181,11 +209,30 @@ const expensesSlice = createSlice({
       .addCase(getExpenseById.rejected, (state, action) => {
         state.getExpenseByIdLoading = false;
         state.getExpenseByIdError = action.payload;
+      })
+      .addCase(deleteExpense.pending, (state) => {
+        state.deleteExpenseLoading = true;
+        state.deleteExpenseError = null;
+      })
+      .addCase(deleteExpense.fulfilled, (state, action) => {
+        state.deleteExpenseLoading = false;
+        state.deleteExpenseError = null;
+        state.deleteModal = false;
+        state.recordId = null;
+      })
+      .addCase(deleteExpense.rejected, (state, action) => {
+        state.deleteExpenseLoading = false;
+        state.deleteExpenseError = action.payload;
       });
   },
 });
 
-export const { resetExpenses, setOpenModal, setEditMode, setRecordId } =
-  expensesSlice.actions;
+export const {
+  resetExpenses,
+  setOpenModal,
+  setDeleteModal,
+  setEditMode,
+  setRecordId,
+} = expensesSlice.actions;
 
 export default expensesSlice.reducer;

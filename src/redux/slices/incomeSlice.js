@@ -62,10 +62,14 @@ const incomeSlice = createSlice({
     incomeError: null,
     addIncomeLoading: false,
     addIncomeError: null,
+    openModal: false,
   },
   reducers: {
     resetincome: (state) => {
       state.incomeData = [];
+    },
+    setIncomeOpenModal: (state, action) => {
+      state.openModal = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -101,6 +105,6 @@ const incomeSlice = createSlice({
   },
 });
 
-export const { resetincome } = incomeSlice.actions;
+export const { resetincome,setIncomeOpenModal } = incomeSlice.actions;
 
 export default incomeSlice.reducer;

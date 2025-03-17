@@ -7,15 +7,26 @@ import dayjs from "dayjs";
 import Spinner from "../components/Spinner";
 import Pagination from "../components/Pagination";
 import {
+  deleteExpense,
+  setDeleteModal,
   setEditMode,
   setOpenModal,
   setRecordId,
 } from "../redux/slices/expensesSlice";
+import { DeleteIcon, EditIcon } from "../utils/icons";
+import IconButton from "../components/IconButton";
+import NewModal from "../components/NewModal";
 
 const Expenses = () => {
-  const { data, expenseError, expenseLoading } = useSelector(
-    (state) => state.expenses
-  );
+  const {
+    data,
+    expenseError,
+    expenseLoading,
+    deleteModal,
+    deleteExpenseLoading,
+    deleteExpenseError,
+    recordId,
+  } = useSelector((state) => state.expenses);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -23,6 +34,12 @@ const Expenses = () => {
       toast.error(expenseError);
     }
   }, [expenseError]);
+
+  useEffect(() => {
+    if (deleteExpenseError) {
+      toast.error(deleteExpenseError);
+    }
+  }, [deleteExpenseError]);
 
   const currentDate = dayjs().format("MMMM, YYYY");
 
@@ -39,7 +56,7 @@ const Expenses = () => {
     : [];
 
   return (
-    <div>
+    <>
       {expenseLoading ? (
         <Spinner />
       ) : (
@@ -66,15 +83,23 @@ const Expenses = () => {
                     </td>
                     <td data-label="Comment">{transaction.expenseComment}</td>
                     <td data-label="Action">
-                      <button
+                      <IconButton
+                        className="icon-button"
+                        icon={EditIcon}
                         onClick={() => {
                           dispatch(setOpenModal(true));
                           dispatch(setEditMode(true));
                           dispatch(setRecordId(transaction.id));
                         }}
-                      >
-                        edit
-                      </button>
+                      />
+                      <IconButton
+                        className="icon-button"
+                        icon={DeleteIcon}
+                        onClick={() => {
+                          dispatch(setDeleteModal(true));
+                          dispatch(setRecordId(transaction.id));
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -92,7 +117,26 @@ const Expenses = () => {
           />
         </div>
       )}
-    </div>
+      {deleteModal && (
+        <NewModal
+          deleteType
+          title="Delete Expense"
+          buttonText="Delete"
+          loading={deleteExpenseLoading}
+          addButtonOnclick={() => {
+            dispatch(deleteExpense(recordId));
+          }}
+          cancelButonOnclick={() => {
+            dispatch(setDeleteModal(false));
+            dispatch(setRecordId(null));
+          }}
+        >
+          <p style={{ marginBottom: "20px" }}>
+            Are you sure you want to delete the Expense?
+          </p>
+        </NewModal>
+      )}
+    </>
   );
 };
 

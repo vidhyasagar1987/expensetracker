@@ -11,9 +11,18 @@ const GlobalButton = ({
   type = "button",
   loading = false,
 }) => {
+  let buttonCss;
+  if (buttonType === "primary") {
+    buttonCss = "primary";
+  } else if (buttonType === "secondary") {
+    buttonCss = "secondary";
+  } else if (buttonType === "delete") {
+    buttonCss = "delete";
+  }
+
   return (
     <button
-      className={`button ${buttonType === "primary" ? "primary" : "secondary"}`}
+      className={`button ${buttonCss}`}
       onClick={onClick}
       disabled={disabled}
       type={type}

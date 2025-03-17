@@ -17,9 +17,8 @@ import GlobalButton from "./GlobalButton";
 import { cancel } from "../utils/constants";
 import { AddIcon, CancelIcon } from "../utils/icons";
 import { toast } from "react-toastify";
-import supabase from "../supabase/client";
-import Spinner from "./Spinner";
 import Loader from "./Loader";
+import NewModal from "./NewModal";
 
 const AddExpense = () => {
   const {
@@ -136,119 +135,92 @@ const AddExpense = () => {
   } else {
     buttonText = "Add";
   }
-  console.log(formik.values);
   return (
-    <div className="modal-background">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">
-            {editMode ? "Edit Expense" : "Add Expense"}
-          </h2>
-        </div>
+    <NewModal
+      title={editMode ? "Edit Expense" : "Add Expense"}
+      buttonText={buttonText}
+      addButtonOnclick={formik.handleSubmit}
+      cancelButonOnclick={() => {
+        dispatch(setOpenModal(false));
+        dispatch(setEditMode(false));
+        dispatch(setRecordId(null));
+      }}
+      loading={addExpenseLoading || updateExpenseLoading}
+    >
+      {getExpenseByIdLoading ? (
+        <Loader />
+      ) : (
+        <form>
+          <InputField
+            label="Expense Amount"
+            type="number"
+            name="expenseAmount"
+            value={formik.values.expenseAmount || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="100.00"
+            required
+            errorMessage={
+              formik.touched.expenseAmount && formik.errors.expenseAmount
+            }
+          />
 
-        <div className="modal-body">
-          {getExpenseByIdLoading ? (
-            <Loader />
-          ) : (
-            <form>
-              <InputField
-                label="Expense Amount"
-                type="number"
-                name="expenseAmount"
-                value={formik.values.expenseAmount || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="100.00"
-                required
-                errorMessage={
-                  formik.touched.expenseAmount && formik.errors.expenseAmount
-                }
-              />
+          <InputField
+            label="Expense Date"
+            type="date"
+            name="expenseDate"
+            value={formik.values.expenseDate || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Enter expense date"
+            errorMessage={
+              formik.touched.expenseDate && formik.errors.expenseDate
+            }
+            required
+          />
 
-              <InputField
-                label="Expense Date"
-                type="date"
-                name="expenseDate"
-                value={formik.values.expenseDate || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Enter expense date"
-                errorMessage={
-                  formik.touched.expenseDate && formik.errors.expenseDate
-                }
-                required
-              />
+          <InputField
+            label="Expense Category"
+            name="expenseCategory"
+            value={formik.values.expenseCategory || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            required
+            select
+            options={[
+              { label: "Rent", value: "Rent" },
+              { label: "Savings", value: "Savings" },
+              { label: "Shopping", value: "Shopping" },
+              { label: "Household", value: "Household" },
+              { label: "Dine Out", value: "Dineout" },
+              { label: "Loan", value: "Loan" },
+              { label: "Travel", value: "Travel" },
+              { label: "Others", value: "Others" },
+            ]}
+            errorMessage={
+              formik.touched.expenseCategory && formik.errors.expenseCategory
+            }
+          />
 
-              <InputField
-                label="Expense Category"
-                name="expenseCategory"
-                value={formik.values.expenseCategory || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-                select
-                options={[
-                  { label: "Rent", value: "Rent" },
-                  { label: "Savings", value: "Savings" },
-                  { label: "Shopping", value: "Shopping" },
-                  { label: "Household", value: "Household" },
-                  { label: "Dine Out", value: "Dineout" },
-                  { label: "Loan", value: "Loan" },
-                  { label: "Travel", value: "Travel" },
-                  { label: "Others", value: "Others" },
-                ]}
-                errorMessage={
-                  formik.touched.expenseCategory &&
-                  formik.errors.expenseCategory
-                }
-              />
-
-              <InputField
-                type="text"
-                label="Expense Comment"
-                name="expenseComment"
-                value={formik.values.expenseComment || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Shopping..."
-                required
-                errorMessage={
-                  formik.touched.expenseComment && formik.errors.expenseComment
-                }
-              />
-              <div className="modal-footer">
-                <GlobalButton
-                  buttonType="primary"
-                  onClick={formik.handleSubmit}
-                  disabled={addExpenseLoading}
-                  icon={AddIcon}
-                  type="submit"
-                  loading={addExpenseLoading || updateExpenseLoading}
-                >
-                  {buttonText}
-                </GlobalButton>
-                <GlobalButton
-                  buttonType="secondary"
-                  icon={CancelIcon}
-                  onClick={() => {
-                    dispatch(setOpenModal(false));
-                    dispatch(setEditMode(false));
-                    dispatch(setRecordId(null));
-                  }}
-                  disabled={addExpenseLoading || updateExpenseLoading}
-                >
-                  {cancel}
-                </GlobalButton>
-              </div>
-            </form>
-          )}
-          {addExpenseError ||
-            (updateExpenseError && (
-              <p className="error">{addExpenseError || updateExpenseError}</p>
-            ))}
-        </div>
-      </div>
-    </div>
+          <InputField
+            type="text"
+            label="Expense Comment"
+            name="expenseComment"
+            value={formik.values.expenseComment || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Shopping..."
+            required
+            errorMessage={
+              formik.touched.expenseComment && formik.errors.expenseComment
+            }
+          />
+        </form>
+      )}
+      {(addExpenseError || updateExpenseError) && (
+        <p className="error">{addExpenseError || updateExpenseError}</p>
+      )}
+    </NewModal>
   );
 };
 

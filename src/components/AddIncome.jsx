@@ -1,15 +1,25 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
-import { addIncome, getincome } from "../redux/slices/incomeSlice";
+import { addIncome, getincome, setIncomeOpenModal } from "../redux/slices/incomeSlice";
+import NewModal from "./NewModal";
+import { toast } from "react-toastify";
+import InputField from "./InputFiled";
+import { month, year } from "../utils/cuurentDate";
 
-const AddIncome = ({ setOpenModal }) => {
+const AddIncome = () => {
   const { addIncomeLoading, addIncomeError } = useSelector(
     (state) => state.income
   );
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (addIncomeError) {
+      toast.error(addIncomeError);
+    }
+  }, [addIncomeError]);
 
   const validationSchema = yup.object({
     incomeAmt: yup.string().required("Required"),
@@ -28,64 +38,62 @@ const AddIncome = ({ setOpenModal }) => {
       const payload = { ...values, createdBy: user?.id };
       const resultAction = await dispatch(addIncome(payload));
       if (addIncome.fulfilled.match(resultAction)) {
-        dispatch(getincome());
+        dispatch(getincome({ month, year }));
         formik.resetForm();
-        setOpenModal(false);
+        dispatch(setIncomeOpenModal(false));
+        toast.success("Income added successfully");
       }
     },
   });
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <input
+    <NewModal
+      title={"Add Income"}
+      buttonText={addIncomeLoading ? "Adding" : "Add"}
+      addButtonOnclick={formik.handleSubmit}
+      cancelButonOnclick={() => {
+        dispatch(setIncomeOpenModal(false));
+      }}
+      loading={addIncomeLoading}
+    >
+      <form>
+        <InputField
           type="number"
           name="incomeAmt"
-          value={formik.values.incomeAmt}
+          label="Income Amount"
+          value={formik.values.incomeAmt || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Enter incomeAmt"
+          placeholder="100.00"
+          required
+          errorMessage={formik.touched.incomeAmt && formik.errors.incomeAmt}
         />
-        {formik.touched.incomeAmt && formik.errors.incomeAmt && (
-          <p>{formik.errors.incomeAmt}</p>
-        )}
-        <input
+
+        <InputField
+          label="Income Date"
           type="date"
           name="incomeDate"
-          value={formik.values.incomeDate}
+          value={formik.values.incomeDate || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Enter incomeDate"
+          placeholder="Enter Income date"
+          errorMessage={formik.touched.incomeDate && formik.errors.incomeDate}
+          required
         />
-        {formik.touched.incomeDate && formik.errors.incomeDate && (
-          <p>{formik.errors.incomeDate}</p>
-        )}
 
-        <input
-          type="incomeSouce"
+        <InputField
+          label="Income Source"
+          type="text"
           name="incomeSouce"
-          value={formik.values.incomeSouce}
+          value={formik.values.incomeSouce || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          placeholder="Enter incomeSouce"
+          placeholder="Enter Income source"
+          errorMessage={formik.touched.incomeSouce && formik.errors.incomeSouce}
+          required
         />
-        {formik.touched.incomeSouce && formik.errors.incomeSouce && (
-          <p>{formik.errors.incomeSouce}</p>
-        )}
-
-        <button type="submit" disabled={addIncomeLoading}>
-          {addIncomeLoading ? "Adding" : "Add"}
-        </button>
-        <button
-          onClick={() => {
-            setOpenModal(false);
-          }}
-          disabled={addIncomeLoading}
-        >
-          Cancel
-        </button>
       </form>
-      {addIncomeError && <p>{addIncomeError}</p>}
-    </div>
+      {addIncomeError && <p className="error">{addIncomeError}</p>}
+    </NewModal>
   );
 };
 
