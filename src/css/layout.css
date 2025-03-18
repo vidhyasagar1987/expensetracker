@@ -266,6 +266,11 @@ td[data-label="Action"] {
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
 .monthly-expenses {
@@ -275,12 +280,14 @@ td[data-label="Action"] {
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   grid-column: span 2;
+  display: none;
 }
 
 .monthly-expenses h3 {
   margin-bottom: 20px;
   text-align: center;
 }
+
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
@@ -387,6 +394,13 @@ td[data-label="Action"] {
   td[data-label="Action"] {
     justify-content: space-evenly;
   }
+
+  .chart-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  
 }
 
 @media screen and (max-width: 480px) {

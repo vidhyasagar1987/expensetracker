@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddIncome from "../components/AddIncome";
-import { setOpenModal } from "../redux/slices/expensesSlice";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { formatAmount } from "../utils/formatAmount";
 import GlobalButton from "../components/GlobalButton";
 import { addIncome } from "../utils/constants";
-import { AddIcon } from "../utils/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "../utils/icons";
 import { currentDateDayJs } from "../utils/cuurentDate";
-import { setIncomeOpenModal } from "../redux/slices/incomeSlice";
+import {
+  deleteIncome,
+  setIncomeDeleteModal,
+  setIncomeEditMode,
+  setIncomeOpenModal,
+  setIncomeRecordId,
+} from "../redux/slices/incomeSlice";
+import IconButton from "../components/IconButton";
+import NewModal from "../components/NewModal";
 
 const Income = () => {
-  const { incomeData, incomeError, incomeLoading, openModal } = useSelector(
-    (state) => state.income
-  );
+  const {
+    incomeData,
+    incomeError,
+    incomeLoading,
+    openModal,
+    deleteModal,
+    deleteIncomeLoading,
+    deleteIncomeError,
+    recordId,
+  } = useSelector((state) => state.income);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -23,9 +37,15 @@ const Income = () => {
     }
   }, [incomeError]);
 
+  useEffect(() => {
+    if (deleteIncomeError) {
+      toast.error(deleteIncomeError);
+    }
+  }, [deleteIncomeError]);
+
   return (
     <>
-      <div style={{marginBottom: "20px"}}>
+      <div style={{ marginBottom: "20px" }}>
         <GlobalButton
           onClick={() => dispatch(setIncomeOpenModal(true))}
           buttonType="primary"
@@ -60,15 +80,23 @@ const Income = () => {
                       ₹ {formatAmount(transaction.incomeAmt)}
                     </td>
                     <td data-label="Action">
-                      <button
+                      <IconButton
+                        className="icon-button"
+                        icon={EditIcon}
                         onClick={() => {
-                          // dispatch(setOpenModal(true));
-                          // dispatch(setEditMode(true));
-                          // dispatch(setRecordId(transaction.id));
+                          dispatch(setIncomeOpenModal(true));
+                          dispatch(setIncomeEditMode(true));
+                          dispatch(setIncomeRecordId(transaction.id));
                         }}
-                      >
-                        edit
-                      </button>
+                      />
+                      <IconButton
+                        className="icon-button"
+                        icon={DeleteIcon}
+                        onClick={() => {
+                          dispatch(setIncomeDeleteModal(true));
+                          dispatch(setIncomeRecordId(transaction.id));
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -76,6 +104,25 @@ const Income = () => {
             </table>
           </div>
         </div>
+      )}
+      {deleteModal && (
+        <NewModal
+          deleteType
+          title="Delete Income"
+          buttonText="Delete"
+          loading={deleteIncomeLoading}
+          addButtonOnclick={() => {
+            dispatch(deleteIncome(recordId));
+          }}
+          cancelButonOnclick={() => {
+            dispatch(setIncomeDeleteModal(false));
+            dispatch(setIncomeRecordId(null));
+          }}
+        >
+          <p style={{ marginBottom: "20px" }}>
+            Are you sure you want to delete the Income?
+          </p>
+        </NewModal>
       )}
     </>
   );

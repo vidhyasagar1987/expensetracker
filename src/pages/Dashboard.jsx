@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   FaMoneyBillWave,
@@ -21,8 +21,8 @@ import {
 } from "recharts";
 import { toast } from "react-toastify";
 import { formatAmount } from "../utils/formatAmount";
-import dayjs from "dayjs";
 import Spinner from "../components/Spinner";
+import { currentDateDayJs } from "../utils/cuurentDate";
 
 const Dashboard = () => {
   const { data, expenseError, expenseLoading } = useSelector(
@@ -110,7 +110,25 @@ const Dashboard = () => {
     (item) => new Date(item.expenseDate).getMonth() === new Date().getMonth()
   );
 
-  const currentDate = dayjs().format("MMMM, YYYY");
+  const COLORS = ["#8884d8", "#82ca9d", "#ffc658"];
+
+  const [chartWidth, setChartWidth] = useState(500);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setChartWidth(window.innerWidth < 768 ? 300 : 500);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  console.log(chartWidth);
 
   return (
     <div>
@@ -120,7 +138,7 @@ const Dashboard = () => {
         <>
           <div className="dashboard-header">
             <h3>Dashboard</h3>
-            <p> Overview for {currentDate}</p>
+            <p> Overview for {currentDateDayJs}</p>
           </div>
           <div className="dashboard-summary">
             <div
@@ -205,12 +223,11 @@ const Dashboard = () => {
               </table>
             </div>
             <div className="chart-section">
-              <h3>Expenses by Category</h3>
               <div>
-                <PieChart width={300} height={300}>
+                <h3>Expenses by Category</h3>
+
+                <PieChart width={chartWidth} height={300}>
                   <Pie
-                    width={300}
-                    height={300}
                     data={pieData}
                     dataKey="value"
                     nameKey="name"
@@ -218,15 +235,18 @@ const Dashboard = () => {
                     cy="50%"
                     outerRadius={100}
                     fill="#8884d8"
+                    label={({ name, value }) =>
+                      `₹${formatAmount(value)}`
+                    }
                   >
                     {pieData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={["#8884d8", "#82ca9d", "#ffc658"][index % 3]}
+                        fill={COLORS[index % COLORS.length]}
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip formatter={(value) => `₹${formatAmount(value)}`} />
                 </PieChart>
               </div>
             </div>

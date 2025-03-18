@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import supabase from "../../supabase/client";
+import { month, year } from "../../utils/cuurentDate";
+
 
 export const getincome = createAsyncThunk(
   "getincome",
@@ -54,6 +56,66 @@ export const addIncome = createAsyncThunk(
   }
 );
 
+export const getIncomeById = createAsyncThunk(
+  "getIncomeById",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from("Income")
+        .select("*")
+        .eq("id", payload);
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+      return data[0];
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateIncome = createAsyncThunk(
+  "updateIncome",
+  async ({ payload, recordId }, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from("Income")
+        .update([payload])
+        .eq("id", recordId)
+        .select();
+
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteIncome = createAsyncThunk(
+  "deleteIncome",
+  async (payload, { rejectWithValue, dispatch }) => {
+    try {
+      const { error } = await supabase
+        .from("Income")
+        .delete()
+        .eq("id", payload);
+
+      if (error) {
+        return rejectWithValue(error.message);
+      }
+
+      await dispatch(getincome({ month, year }));
+      return { success: true };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const incomeSlice = createSlice({
   name: "income",
   initialState: {
@@ -63,6 +125,16 @@ const incomeSlice = createSlice({
     addIncomeLoading: false,
     addIncomeError: null,
     openModal: false,
+    editMode: false,
+    recordId: null,
+    editData: {},
+    getIncomeByIdLoading: false,
+    getIncomeByIdError: null,
+    updateIncomeLoading: false,
+    updateIncomeError: null,
+    deleteModal: false,
+    deleteIncomeLoading: false,
+    deleteIncomeError: null,
   },
   reducers: {
     resetincome: (state) => {
@@ -70,6 +142,15 @@ const incomeSlice = createSlice({
     },
     setIncomeOpenModal: (state, action) => {
       state.openModal = action.payload;
+    },
+    setIncomeEditMode: (state, action) => {
+      state.editMode = action.payload;
+    },
+    setIncomeRecordId: (state, action) => {
+      state.recordId = action.payload;
+    },
+    setIncomeDeleteModal: (state, action) => {
+      state.deleteModal = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -94,17 +175,62 @@ const incomeSlice = createSlice({
         state.addIncomeError = null;
       })
       .addCase(addIncome.fulfilled, (state, action) => {
-        console.log(action);
         state.addIncomeLoading = false;
         state.addIncomeError = null;
       })
       .addCase(addIncome.rejected, (state, action) => {
         state.addIncomeLoading = false;
         state.addIncomeError = action.payload;
+      })
+      .addCase(updateIncome.pending, (state) => {
+        state.updateIncomeLoading = true;
+        state.updateIncomeError = null;
+      })
+      .addCase(updateIncome.fulfilled, (state) => {
+        state.updateIncomeLoading = false;
+        state.updateIncomeError = null;
+      })
+      .addCase(updateIncome.rejected, (state, action) => {
+        state.updateIncomeLoading = false;
+        state.updateIncomeError = action.payload;
+      })
+      .addCase(getIncomeById.pending, (state) => {
+        state.getIncomeByIdLoading = true;
+        state.getIncomeByIdError = null;
+        state.editData = {};
+      })
+      .addCase(getIncomeById.fulfilled, (state, action) => {
+        state.getIncomeByIdLoading = false;
+        state.getIncomeByIdError = null;
+        state.editData = action.payload;
+      })
+      .addCase(getIncomeById.rejected, (state, action) => {
+        state.getIncomeByIdLoading = false;
+        state.getIncomeByIdError = action.payload;
+      })
+      .addCase(deleteIncome.pending, (state) => {
+        state.deleteIncomeLoading = true;
+        state.deleteIncomeError = null;
+      })
+      .addCase(deleteIncome.fulfilled, (state, action) => {
+        state.deleteIncomeLoading = false;
+        state.deleteIncomeError = null;
+        state.deleteModal = false;
+        state.recordId = null;
+      })
+      .addCase(deleteIncome.rejected, (state, action) => {
+        state.deleteIncomeLoading = false;
+        state.deleteIncomeError = action.payload;
       });
   },
 });
 
-export const { resetincome,setIncomeOpenModal } = incomeSlice.actions;
+export const {
+  resetincome,
+  setIncomeOpenModal,
+  setIncomeDeleteModal,
+  setIncomeEditMode,
+  setIncomeRecordId,
+} = incomeSlice.actions;
 
 export default incomeSlice.reducer;

@@ -85,7 +85,7 @@ const AddExpense = () => {
           dispatch(setEditMode(false));
           dispatch(setRecordId(null));
 
-          toast.success("Expense Update successfully");
+          toast.success("Expense Updated successfully");
         }
       } else {
         const payload = { ...values, createdBy: user?.id };

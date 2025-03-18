@@ -16,6 +16,7 @@ import {
 import { DeleteIcon, EditIcon } from "../utils/icons";
 import IconButton from "../components/IconButton";
 import NewModal from "../components/NewModal";
+import { currentDateDayJs } from "../utils/cuurentDate";
 
 const Expenses = () => {
   const {
@@ -41,7 +42,7 @@ const Expenses = () => {
     }
   }, [deleteExpenseError]);
 
-  const currentDate = dayjs().format("MMMM, YYYY");
+  const currentDate = currentDateDayJs;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
