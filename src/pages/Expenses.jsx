@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as XLSX from "xlsx";
 import "../css/layout.css";
 import { formatAmount } from "../utils/formatAmount";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 import Spinner from "../components/Spinner";
 import Pagination from "../components/Pagination";
 import {
@@ -13,10 +13,11 @@ import {
   setOpenModal,
   setRecordId,
 } from "../redux/slices/expensesSlice";
-import { DeleteIcon, EditIcon } from "../utils/icons";
+import { DeleteIcon, DownloadIcon, EditIcon } from "../utils/icons";
 import IconButton from "../components/IconButton";
 import NewModal from "../components/NewModal";
 import { currentDateDayJs } from "../utils/cuurentDate";
+import GlobalButton from "../components/GlobalButton";
 
 const Expenses = () => {
   const {
@@ -56,13 +57,24 @@ const Expenses = () => {
     ? data?.slice(indexOfFirstPost, indexofLastPost)
     : [];
 
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Expenses");
+    XLSX.writeFile(workbook, `expenses_${currentDate}.xlsx`);
+  };
   return (
     <>
       {expenseLoading ? (
         <Spinner />
       ) : (
         <div className="transactions-section">
-          <h3>All Expenses for {currentDate}</h3>
+          <div className="expenses-header">
+            <h3>All Expenses for {currentDate}</h3>
+            <GlobalButton buttonType="secondary" onClick={exportToExcel} icon={DownloadIcon}>
+              Export to Excel
+            </GlobalButton>
+          </div>
           <div className="table-responsive">
             <table className="transactions-table">
               <thead>

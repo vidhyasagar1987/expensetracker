@@ -9,8 +9,8 @@ import "../css/login.css";
 import GlobalButton from "../components/GlobalButton";
 import { toast } from "react-toastify";
 import { LoginIcon } from "../utils/icons";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; 
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Logo from "../assets/logo.jpg";
 
 const Login = () => {
   const { email, password, loginLoading, loginError } = useSelector(
@@ -49,14 +49,11 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-image-container">
-        <div className="login-overlay">
-          <h1 className="login-overlay-text">Expense Tracker</h1>
-        </div>
-      </div>
       <div className="login-form-container">
+        <img src={Logo} alt="Logo" className="login-logo" />
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Please log in to access your account</p>
+
         {loginError && <p className="login-error">{loginError}</p>}
 
         <form onSubmit={formik.handleSubmit} className="login-form">
@@ -98,8 +95,9 @@ const Login = () => {
             icon={LoginIcon}
             type="submit"
             loading={loginLoading}
+            // className="global-button"
           >
-            {loginLoading ? "Submitting" : "Login"}
+            {loginLoading ? "Submitting..." : "Login"}
           </GlobalButton>
         </form>
       </div>

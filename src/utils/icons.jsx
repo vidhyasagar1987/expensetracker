@@ -4,7 +4,27 @@ import { IoLogIn } from "react-icons/io5";
 import { IoLogOut } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
+import { IoCloseSharp } from "react-icons/io5";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { FaDownload } from "react-icons/fa6";
 
+export const HamburgerIcon = (
+  <GiHamburgerMenu
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
+);
+
+export const CloseIcon = (
+  <IoCloseSharp
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
+);
+
+export const DownloadIcon = (
+  <FaDownload
+    style={{ fontSize: "1rem", paddingRight: "4px", paddingTop: "2px" }}
+  />
+);
 
 export const AddIcon = (
   <IoMdAdd
@@ -47,7 +67,7 @@ export const DeleteIcon = (
       fontSize: "1rem",
       paddingRight: "4px",
       paddingTop: "2px",
-      color:"red",
+      color: "red",
       cursor: "pointer",
     }}
   />

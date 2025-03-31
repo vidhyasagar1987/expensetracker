@@ -116,7 +116,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setChartWidth(window.innerWidth < 768 ? 300 : 500);
+      setChartWidth(window.innerWidth < 768 ? 300 : 400);
     };
 
     handleResize();
@@ -128,7 +128,6 @@ const Dashboard = () => {
     };
   }, []);
 
-  console.log(chartWidth);
 
   return (
     <div>
@@ -255,7 +254,7 @@ const Dashboard = () => {
           <div className="monthly-expenses">
             <h3>Current Month Expenses</h3>
             <BarChart
-              width={600}
+              width={1400}
               height={300}
               data={barData}
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

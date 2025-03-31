@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import { getAuthDetails } from "../redux/slices/authSlice.js";
 import { getExpenses, setOpenModal } from "../redux/slices/expensesSlice.js";
@@ -10,9 +10,10 @@ import { PiHandWavingBold } from "react-icons/pi";
 import { addExpense, logo } from "../utils/constants.jsx";
 import AddExpense from "../components/AddExpense.jsx";
 import GlobalButton from "../components/GlobalButton.jsx";
-import { AddIcon } from "../utils/icons.jsx";
+import { AddIcon, CloseIcon, HamburgerIcon } from "../utils/icons.jsx";
 import Spinner from "../components/Spinner.jsx";
 import { toast } from "react-toastify";
+import Logo from "../assets/logo.jpg";
 
 const Wrapper = ({ children }) => {
   const { user, isAuthenticated, authlLoading, authError } = useSelector(
@@ -36,7 +37,7 @@ const Wrapper = ({ children }) => {
       const currentDate = new Date();
       const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
-
+      localStorage.setItem("isLoggedin", isAuthenticated);
       dispatch(getExpenses({ month, year }));
       dispatch(getincome({ month, year }));
     }
@@ -63,9 +64,13 @@ const Wrapper = ({ children }) => {
           className="hamburger-icon"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          &#9776;
+          {isMobileMenuOpen ? CloseIcon : HamburgerIcon}
         </button>
-        <div className="logo">{logo}</div>
+
+        <Link to="/dashboard">
+          <img src={Logo} alt="Logo" className="dash-logo" />
+        </Link>
+
         <div className="helloText">
           <PiHandWavingBold
             style={{ color: "#7C52F4", fontSize: "2rem", paddingRight: "5px" }}
@@ -83,7 +88,14 @@ const Wrapper = ({ children }) => {
       </header>
 
       <aside className={`navigation ${isMobileMenuOpen ? "open" : ""}`}>
-        <Navigation />
+        {/* <button
+          className="close-icon"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          {CloseIcon}
+        </button> */}
+
+        <Navigation onItemClick={() => setIsMobileMenuOpen(false)} />
       </aside>
 
       {openModal && <AddExpense />}

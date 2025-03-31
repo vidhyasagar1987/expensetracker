@@ -8,10 +8,12 @@ import { useSelector } from "react-redux";
 import Export from "./pages/Export";
 import Income from "./pages/Income";
 import { ToastContainer } from "react-toastify";
+import NotFound from "./pages/NotFound";
 
 function App() {
   // const { isAuthenticated, user } = useSelector((state) => state.auth);
   // console.log(isAuthenticated, user);
+  const userLoggedin = localStorage.getItem("isLoggedin");
   return (
     <>
       <ToastContainer
@@ -24,19 +26,20 @@ function App() {
         theme="light"
       />
       <Routes>
-        {/* <Route
-        path="/"
-        index
-        element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
-        }
-      /> */}
-        <Route path="/" index element={<Login />} />
+        <Route
+          path="/"
+          index
+          element={
+            userLoggedin ? <Navigate to="/dashboard" replace /> : <Login />
+          }
+        />
+        {/* <Route path="/" index element={<Login />} /> */}
         <Route path="/" element={<Wrapper />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<Expenses />} />
-          <Route path="/export" element={<Export />} />
+          {/* <Route path="/export" element={<Export />} /> */}
           <Route path="/income" element={<Income />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>
