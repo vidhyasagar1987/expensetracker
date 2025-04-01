@@ -46,17 +46,20 @@ const InputField = ({
         </select>
       ) : (
         <div className="input-wrapper">
-          <input
-            id={name}
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur}
-            placeholder={placeholder}
-            className={`input ${errorMessage ? "input-error" : ""}`}
-            {...rest}
-          />
+          <div className={type === "date" ? "date-input-wrapper" : ""}>
+            <input
+              id={name}
+              type={type}
+              name={name}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              placeholder={placeholder}
+              className={`input ${errorMessage ? "input-error" : ""}`}
+              {...rest}
+            />
+            {type === "date" && <div className="date-icon">📅</div>}
+          </div>
           {icon && <div className="input-icon">{icon}</div>}
         </div>
       )}

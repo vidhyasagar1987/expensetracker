@@ -20,6 +20,7 @@
   opacity: 0.8;
   font-size: 13px;
 }
+
 .required-asterisk {
   color: #ff5d01;
   margin-left: 2px;
@@ -29,12 +30,10 @@
   position: relative;
 }
 
-
 .input {
   width: 100%;
   padding: 12px 10px;
   padding-right: 40px; /* Adjust padding for the icon */
-
   font-size: 14px;
   border: 1px solid #b9b9b9;
   border-radius: 5px;
@@ -53,6 +52,7 @@
   border-color: #ff5d01;
   color: #ff0101 !important;
 }
+
 .input-icon {
   position: absolute;
   top: 42%;
@@ -61,6 +61,7 @@
   cursor: pointer;
   color: #777;
 }
+
 .error-message {
   color: #ff0101;
   font-size: 12px;
@@ -85,6 +86,56 @@
   background-color: #f9f9f9;
 }
 
+/* Updated Date Picker Styles */
+.date-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.date-icon {
+  position: absolute;
+  right: 10px;
+  top: 35%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 18px;
+  color: #666;
+}
+
+.input,
+select,
+input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Select Dropdown Improvements */
+select.input {
+  background-color: #fff;
+  padding-right: 35px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cpath d='M70 95L20 45h100z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+select.input:focus {
+  border-color: #7c52f4;
+}
+
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .input-container {
     margin-bottom: 10px;
@@ -102,9 +153,8 @@
   }
 
   .input {
-    padding: 8px 6px;
-    padding-right: 35px; /* Adjust padding for the icon on smaller screens */
-
+    /* padding: 8px 6px; */
+    padding-right: 35px;
     font-size: 12px;
     border-radius: 4px;
   }
@@ -117,48 +167,8 @@
     font-size: 12px;
     padding: 6px;
   }
+  .date-icon{
+    font-size: 15px;
+  }
 }
 
-
-.date-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.date-label {
-  font-size: 0.875rem;
-  color: #6b7280;
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  background-color: white;
-  padding: 0 5px;
-  z-index: 1;
-}
-
-.date-input {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: linear-gradient(to right, #f8fafc, #f1f5f9);
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.date-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
-}
-
-.date-input::placeholder {
-  color: #9ca3af;
-  font-style: italic;
-}
-
-.date-input:hover {
-  background: linear-gradient(to right, #e5e7eb, #f1f5f9);
-}
