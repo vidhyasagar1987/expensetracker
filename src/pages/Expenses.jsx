@@ -71,63 +71,79 @@ const Expenses = () => {
         <div className="transactions-section">
           <div className="expenses-header">
             <h3>All Expenses for {currentDate}</h3>
-            <GlobalButton buttonType="secondary" onClick={exportToExcel} icon={DownloadIcon}>
-              Export to Excel
-            </GlobalButton>
+            {data?.length ? (
+              <GlobalButton
+                buttonType="secondary"
+                onClick={exportToExcel}
+                icon={DownloadIcon}
+              >
+                Export to Excel
+              </GlobalButton>
+            ) : (
+              <></>
+            )}
           </div>
           <div className="table-responsive">
-            <table className="transactions-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Category</th>
-                  <th>Amount</th>
-                  <th>Comment</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td data-label="Date">{transaction.expenseDate}</td>
-                    <td data-label="Category">{transaction.expenseCategory}</td>
-                    <td data-label="Amount">
-                      ₹ {formatAmount(transaction.expenseAmount)}
-                    </td>
-                    <td data-label="Comment">{transaction.expenseComment}</td>
-                    <td data-label="Action">
-                      <IconButton
-                        className="icon-button"
-                        icon={EditIcon}
-                        onClick={() => {
-                          dispatch(setOpenModal(true));
-                          dispatch(setEditMode(true));
-                          dispatch(setRecordId(transaction.id));
-                        }}
-                      />
-                      <IconButton
-                        className="icon-button"
-                        icon={DeleteIcon}
-                        onClick={() => {
-                          dispatch(setDeleteModal(true));
-                          dispatch(setRecordId(transaction.id));
-                        }}
-                      />
-                    </td>
+            {data?.length ? (
+              <table className="transactions-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Comment</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredData.map((transaction) => (
+                    <tr key={transaction.id}>
+                      <td data-label="Date">{transaction.expenseDate}</td>
+                      <td data-label="Category">
+                        {transaction.expenseCategory}
+                      </td>
+                      <td data-label="Amount">
+                        ₹ {formatAmount(transaction.expenseAmount)}
+                      </td>
+                      <td data-label="Comment">{transaction.expenseComment}</td>
+                      <td data-label="Action">
+                        <IconButton
+                          className="icon-button"
+                          icon={EditIcon}
+                          onClick={() => {
+                            dispatch(setOpenModal(true));
+                            dispatch(setEditMode(true));
+                            dispatch(setRecordId(transaction.id));
+                          }}
+                        />
+                        <IconButton
+                          className="icon-button"
+                          icon={DeleteIcon}
+                          onClick={() => {
+                            dispatch(setDeleteModal(true));
+                            dispatch(setRecordId(transaction.id));
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="noExpense">No Expenses Added</p>
+            )}
           </div>
-          <Pagination
-            setCurrentPage={setCurrentPage}
-            totalNoRecords={totalNoRecords}
-            recordsPerPage={recordsPerPage}
-            currentPage={currentPage}
-            filteredData={filteredData}
-            indexOfFirstPost={indexOfFirstPost}
-            setRecordsPerPage={setRecordsPerPage}
-          />
+          {filteredData?.length > recordsPerPage && (
+            <Pagination
+              setCurrentPage={setCurrentPage}
+              totalNoRecords={totalNoRecords}
+              recordsPerPage={recordsPerPage}
+              currentPage={currentPage}
+              filteredData={filteredData}
+              indexOfFirstPost={indexOfFirstPost}
+              setRecordsPerPage={setRecordsPerPage}
+            />
+          )}
         </div>
       )}
       {deleteModal && (

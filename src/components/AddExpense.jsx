@@ -188,7 +188,7 @@ const AddExpense = () => {
             required
             select
             options={[
-              { label: "Rent", value: "Rent" },
+              { label: "Entertainment", value: "Entertainment" },
               { label: "Savings", value: "Savings" },
               { label: "Shopping", value: "Shopping" },
               { label: "Household", value: "Household" },

@@ -62,46 +62,50 @@ const Income = () => {
         <div className="transactions-section">
           <h3>All Income for {currentDateDayJs}</h3>
           <div className="table-responsive">
-            <table className="transactions-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Source</th>
-                  <th>Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {incomeData.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td data-label="Date">{transaction.incomeDate}</td>
-                    <td data-label="Source">{transaction.incomeSouce}</td>
-                    <td data-label="Amount">
-                      ₹ {formatAmount(transaction.incomeAmt)}
-                    </td>
-                    <td data-label="Action">
-                      <IconButton
-                        className="icon-button"
-                        icon={EditIcon}
-                        onClick={() => {
-                          dispatch(setIncomeOpenModal(true));
-                          dispatch(setIncomeEditMode(true));
-                          dispatch(setIncomeRecordId(transaction.id));
-                        }}
-                      />
-                      <IconButton
-                        className="icon-button"
-                        icon={DeleteIcon}
-                        onClick={() => {
-                          dispatch(setIncomeDeleteModal(true));
-                          dispatch(setIncomeRecordId(transaction.id));
-                        }}
-                      />
-                    </td>
+            {incomeData?.length ? (
+              <table className="transactions-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Source</th>
+                    <th>Amount</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {incomeData.map((transaction) => (
+                    <tr key={transaction.id}>
+                      <td data-label="Date">{transaction.incomeDate}</td>
+                      <td data-label="Source">{transaction.incomeSouce}</td>
+                      <td data-label="Amount">
+                        ₹ {formatAmount(transaction.incomeAmt)}
+                      </td>
+                      <td data-label="Action">
+                        <IconButton
+                          className="icon-button"
+                          icon={EditIcon}
+                          onClick={() => {
+                            dispatch(setIncomeOpenModal(true));
+                            dispatch(setIncomeEditMode(true));
+                            dispatch(setIncomeRecordId(transaction.id));
+                          }}
+                        />
+                        <IconButton
+                          className="icon-button"
+                          icon={DeleteIcon}
+                          onClick={() => {
+                            dispatch(setIncomeDeleteModal(true));
+                            dispatch(setIncomeRecordId(transaction.id));
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="noExpense">No Income Added</p>
+            )}
           </div>
         </div>
       )}

@@ -128,7 +128,6 @@ const Dashboard = () => {
     };
   }, []);
 
-
   return (
     <div>
       {expenseLoading || incomeLoading ? (
@@ -198,75 +197,83 @@ const Dashboard = () => {
           <div className="dashboard-details">
             <div className="transactions-section">
               <h3>Recent Transactions</h3>
-              <table className="transactions-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentTransactions.map((transaction) => (
-                    <tr key={transaction.id}>
-                      <td data-label="Date">{transaction.expenseDate}</td>
-                      <td data-label="Category">
-                        {transaction.expenseCategory}
-                      </td>
-                      <td data-label="Amount">
-                        ₹ {formatAmount(transaction.expenseAmount)}
-                      </td>
+              {recentTransactions?.length ? (
+                <table className="transactions-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Category</th>
+                      <th>Amount</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {recentTransactions?.map((transaction) => (
+                      <tr key={transaction.id}>
+                        <td data-label="Date">{transaction.expenseDate}</td>
+                        <td data-label="Category">
+                          {transaction.expenseCategory}
+                        </td>
+                        <td data-label="Amount">
+                          ₹ {formatAmount(transaction.expenseAmount)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="noExpense">No Expenses Added</p>
+              )}
             </div>
             <div className="chart-section">
               <div>
                 <h3>Expenses by Category</h3>
-
-                <PieChart width={chartWidth} height={300}>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    fill="#8884d8"
-                    label={({ name, value }) =>
-                      `₹${formatAmount(value)}`
-                    }
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `₹${formatAmount(value)}`} />
-                </PieChart>
+                {pieData?.length ? (
+                  <PieChart width={chartWidth} height={300}>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      fill="#8884d8"
+                      label={({ name, value }) => `₹${formatAmount(value)}`}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `₹${formatAmount(value)}`} />
+                  </PieChart>
+                ) : (
+                  <p className="noExpense">No Expenses Added</p>
+                )}
               </div>
             </div>
           </div>
-
-          <div className="monthly-expenses">
-            <h3>Current Month Expenses</h3>
-            <BarChart
-              width={1400}
-              height={300}
-              data={barData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="expenseDate" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="expenseAmount" fill="#8884d8" />
-            </BarChart>
-          </div>
+          {barData?.length ? (
+            <div className="monthly-expenses">
+              <h3>Current Month Expenses</h3>
+              <BarChart
+                width={1400}
+                height={300}
+                data={barData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="expenseDate" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="expenseAmount" fill="#8884d8" />
+              </BarChart>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       )}
     </div>
