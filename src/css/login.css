@@ -2,9 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background: #f4f4f4;
-  padding: 0 20px;
+  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -51,32 +51,30 @@
   cursor: pointer;
 }
 
-/* Responsive */
+/* Responsive Fix for Mobile */
 @media (max-width: 600px) {
-
   .login-container {
+    padding: 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: #f4f4f4;
-    padding: 0;
-    box-sizing: border-box; */
+    justify-content: center;
   }
-  
+
   .login-form-container {
-    width: 90%;
+    width: 100%;
     padding: 1.5rem;
+    max-width: 90%;
     box-sizing: border-box;
   }
 
   .login-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 
   .login-subtitle {
     font-size: 0.9rem;
   }
+
   .dash-logo {
     height: 30px;
     width: auto;

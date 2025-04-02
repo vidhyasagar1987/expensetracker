@@ -110,6 +110,10 @@ input[type="date"] {
   -moz-appearance: none;
   appearance: none;
 }
+input[type="date"] {
+  text-align: left !important;
+  padding-right: 40px;
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
