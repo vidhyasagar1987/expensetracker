@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: #f4f4f4;
   padding: 20px;
   box-sizing: border-box;
@@ -16,8 +16,8 @@
   width: 100%;
   max-width: 400px;
   text-align: center;
+  margin: auto; 
 }
-
 .login-logo {
   width: 80%;
   margin-bottom: 1rem;
@@ -54,25 +54,21 @@
 /* Responsive Fix for Mobile */
 @media (max-width: 600px) {
   .login-container {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start; 
+    padding-top: 10vh; 
   }
 
   .login-form-container {
-    width: 100%;
+    width: 90%;
     padding: 1.5rem;
-    max-width: 90%;
     box-sizing: border-box;
   }
-
   .login-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .login-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .dash-logo {
