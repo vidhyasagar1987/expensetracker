@@ -33,7 +33,7 @@
 .input {
   width: 100%;
   padding: 12px 10px;
-  padding-right: 40px; /* Adjust padding for the icon */
+  padding-right: 40px;
   font-size: 14px;
   border: 1px solid #b9b9b9;
   border-radius: 5px;
@@ -42,6 +42,7 @@
   transition: border-color 0.3s;
   color: #333;
   box-sizing: border-box;
+  text-align: left;
 }
 
 .input:focus {
@@ -134,7 +135,6 @@ select.input:focus {
   border-color: #7c52f4;
 }
 
-
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .input-container {
@@ -167,8 +167,7 @@ select.input:focus {
     font-size: 12px;
     padding: 6px;
   }
-  .date-icon{
+  .date-icon {
     font-size: 15px;
   }
 }
-

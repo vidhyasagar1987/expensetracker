@@ -34,6 +34,8 @@ const authSlice = createSlice({
       state.user = null;
       state.authlLoading = true;
       state.authError = null;
+      localStorage.removeItem("isLoggedin");
+
     },
   },
   extraReducers: (builder) => {
